@@ -1,0 +1,104 @@
+# docker-compose.yml
+# 2023-06-23 | CR
+#
+
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: lnmp_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${BASE_DIR}/src:/usr/share/nginx/html
+      - ${WORKING_DIR}/nginx-conf:/etc/nginx/conf.d
+      - ${WORKING_DIR}/ssl-certs:/etc/nginx/ssl-certs
+    # environment:
+      # GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      # APP_NAME: ${APP_NAME}
+      # PLACE_NAME_MY_OFFICE: ${PLACE_NAME_MY_OFFICE}
+      # LAT_MY_OFFICE: ${LAT_MY_OFFICE}
+      # LONG_MY_OFFICE: ${LONG_MY_OFFICE}
+      # LAT0: ${LAT0}
+      # LONG0: ${LONG0}
+      # ZOOM0: ${ZOOM0}
+      # PLACE_NAME_1: ${PLACE_NAME_1}
+      # LAT1: ${LAT1}
+      # LONG1: ${LONG1}
+      # PLACE_NAME_2: ${PLACE_NAME_2}
+      # LAT2: ${LAT2}
+      # LONG2: ${LONG2}
+      # TRAVEL_MODE: ${TRAVEL_MODE}
+      # TRAFFIC_MODEL: ${TRAFFIC_MODEL}
+      # AVOID_HIGHWAYS: ${AVOID_HIGHWAYS}
+      # AVOID_TOLLS: ${AVOID_TOLLS}
+      # N: ${N}
+      # TARIFA_DLR_POR_KM: ${TARIFA_DLR_POR_KM}
+      # CANTIDAD_VIAJES: ${CANTIDAD_VIAJES}
+      # KM_POR_LITRO: ${KM_POR_LITRO}
+      # COSTO_LITRO_GASOLINA: ${COSTO_LITRO_GASOLINA}
+      # SERVICIO_CADA_X_KM: ${SERVICIO_CADA_X_KM}
+      # SERVICIO_COSTO: ${SERVICIO_COSTO}
+      # KM_MY_OFFICE_TO_ORIGIN: ${KM_MY_OFFICE_TO_ORIGIN}
+      # KM_DESTINATION_TO_MY_OFFICE: ${KM_DESTINATION_TO_MY_OFFICE}
+    depends_on:
+      - php
+
+  php:
+    # image: php:8-fpm
+    build: ./php
+    container_name: lnmp_php
+    # environment:
+    #   GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+    #   APP_NAME: ${APP_NAME}
+    #   PLACE_NAME_MY_OFFICE: ${PLACE_NAME_MY_OFFICE}
+    #   LAT_MY_OFFICE: ${LAT_MY_OFFICE}
+    #   LONG_MY_OFFICE: ${LONG_MY_OFFICE}
+    #   LAT0: ${LAT0}
+    #   LONG0: ${LONG0}
+    #   ZOOM0: ${ZOOM0}
+    #   PLACE_NAME_1: ${PLACE_NAME_1}
+    #   LAT1: ${LAT1}
+    #   LONG1: ${LONG1}
+    #   PLACE_NAME_2: ${PLACE_NAME_2}
+    #   LAT2: ${LAT2}
+    #   LONG2: ${LONG2}
+    #   TRAVEL_MODE: ${TRAVEL_MODE}
+    #   TRAFFIC_MODEL: ${TRAFFIC_MODEL}
+    #   AVOID_HIGHWAYS: ${AVOID_HIGHWAYS}
+    #   AVOID_TOLLS: ${AVOID_TOLLS}
+    #   N: ${N}
+    #   TARIFA_DLR_POR_KM: ${TARIFA_DLR_POR_KM}
+    #   CANTIDAD_VIAJES: ${CANTIDAD_VIAJES}
+    #   KM_POR_LITRO: ${KM_POR_LITRO}
+    #   COSTO_LITRO_GASOLINA: ${COSTO_LITRO_GASOLINA}
+    #   SERVICIO_CADA_X_KM: ${SERVICIO_CADA_X_KM}
+    #   SERVICIO_COSTO: ${SERVICIO_COSTO}
+    #   KM_MY_OFFICE_TO_ORIGIN: ${KM_MY_OFFICE_TO_ORIGIN}
+    #   KM_DESTINATION_TO_MY_OFFICE: ${KM_DESTINATION_TO_MY_OFFICE}
+    volumes:
+      - ${BASE_DIR}/src:/usr/share/nginx/html
+
+  mysql:
+    # image: mysql:5.7
+    image: mysql:5.6
+    platform: linux/x86_64
+    container_name: lnmp_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ${WORKING_DIR}/mysql-backup_restore:/var/backup_restore
+      - ${WORKING_DIR}/mysql-data:/var/lib/mysql
+      - ${WORKING_DIR}/mysql-conf:/etc/mysql/conf.d
+    # command: --explicit_defaults_for_timestamp
+
+volumes:
+  html:
+  mysql-data:
+  nginx-conf:
+  mysql-conf:
